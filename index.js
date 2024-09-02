@@ -24,6 +24,10 @@ app.get("/locations/:id", async (req, res) => {
   res.json(locations);
 });
 
+app.get("/map", async (req, res) => {
+  res.sendFile(__dirname + "/index.html");
+});
+
 app.listen(port, () => {
   console.log(`Example app listening on port ${port}`);
 });
