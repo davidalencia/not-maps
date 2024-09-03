@@ -17,21 +17,54 @@
         margin: 0;
         padding: 0;
       }
+      #name {
+        text-decoration: none;
+        color: black;
+        font-size: 2rem;
+        padding: 1rem;
+      }
       #map {
         position: absolute;
         top: 0;
         bottom: 0;
         width: 100%;
       }
+      .map-overlay {
+        font: bold 12px/20px "Helvetica Neue", Arial, Helvetica, sans-serif;
+        position: absolute;
+        width: 33%;
+        top: 0;
+        left: 0;
+        padding: 10px;
+        visibility: hidden;
+      }
+      .map-overlay .map-overlay-inner {
+        background-color: #fff;
+        box-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+        border-radius: 3px;
+        padding: 10px;
+        margin-bottom: 10px;
+      }
     </style>
   </head>
   <body>
     <div id="map"></div>
+    <div class="map-overlay">
+      <div class="map-overlay-inner">
+        <a id="name"></a>
+        <ul id="list"></ul>
+      </div>
+    </div>
 
     <script>
       mapboxgl.accessToken =
         "pk.eyJ1IjoiZGF2aWRhbGVuY2lhIiwiYSI6ImNtMGtiY3lsdDE3eWsya29jc24zYmluaXAifQ.t5cofiscVTV2QrgPWG1sCg";
+
       const params = new URLSearchParams(window.location.search);
+      const overlay = document.getElementsByClassName("map-overlay")[0];
+      const name = document.getElementById("name");
+      const list = document.getElementById("list");
+      const mapHtml = document.getElementById("map");
 
       if (params.get("db"))
         fetch(
@@ -49,7 +82,14 @@
               zoom: 8,
             });
             locations.forEach((l) => {
-              new mapboxgl.Marker().setLngLat([l.lon, l.lat]).addTo(map);
+              let marker = new mapboxgl.Marker()
+                .setLngLat([l.lon, l.lat])
+                .addTo(map);
+              marker.getElement().addEventListener("click", (event) => {
+                overlay.style.visibility = "visible";
+                name.innerHTML = l.name;
+                name.href = l.url;
+              });
             });
           });
     </script>
