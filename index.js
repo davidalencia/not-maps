@@ -20,6 +20,8 @@ app.get("/locations/:id", async (req, res) => {
     lat: x.properties.Lat.number,
     lon: x.properties.Lon.number,
     name: x.properties.Name.title.reduce((pv, cv) => pv + cv.plain_text, ""),
+    url: x.url,
+    properties: x.properties,
   }));
   res.json(locations);
 });
